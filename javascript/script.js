@@ -9,9 +9,17 @@ const playerFactory = (name, symbol) => {
 
 const gameController = (() => {
 
+    // function to set up the game
+    const setUpGame = () => {
+        gameGrid.generateGrid()
+        gameGrid.activateCells()
+    }
+
     // function to coordinate the gameplay loop
     const gameplayLoop = () => {
-        
+        gameGrid.etchCell(event)
+        gameGrid.updateGrid(event)
+        swapPlayers()
     }
 
     // function to swap players after they played
@@ -24,6 +32,8 @@ const gameController = (() => {
     }
 
     return {
+        setUpGame,
+        gameplayLoop,
         swapPlayers
     }
 })()
@@ -35,10 +45,17 @@ const gameGrid = (() => {
     // function to make grid cells responsive
     const activateCells = () => {
         document.querySelectorAll(`.single-cell`).forEach((item) => {
-            item.addEventListener(`click`, function () {
-                this.innerHTML = currentPlayer.symbol
-            })
+            item.addEventListener(`click`, gameController.gameplayLoop)
         })
+    }
+
+    // function to etch cells
+    const etchCell = (event) => {
+        event.target.innerHTML = currentPlayer.symbol
+    }
+
+    const updateGrid = (event) => {
+        gridSpots[event.target.dataset.index] = currentPlayer.symbol
     }
 
     // function to generate the initial empty grid
@@ -59,6 +76,8 @@ const gameGrid = (() => {
     return {
         generateGrid,
         activateCells,
+        etchCell,
+        updateGrid,
         resetGrid
     }
 })()
@@ -67,5 +86,4 @@ const playerOne = playerFactory("Pippo", "X")
 const playerTwo = playerFactory("Mak", "O")
 let currentPlayer = playerOne
 
-gameGrid.generateGrid()
-gameGrid.activateCells()
+gameController.setUpGame()
