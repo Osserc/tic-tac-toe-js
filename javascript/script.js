@@ -17,6 +17,7 @@ const gameController = (() => {
 
     // function to coordinate the gameplay loop
     const gameplayLoop = () => {
+        console.log("Hi!")
         gameGrid.etchCell(event)
         gameGrid.updateGrid(event)
         swapPlayers()
@@ -45,7 +46,7 @@ const gameGrid = (() => {
     // function to make grid cells responsive
     const activateCells = () => {
         document.querySelectorAll(`.single-cell`).forEach((item) => {
-            item.addEventListener(`click`, gameController.gameplayLoop)
+            item.addEventListener(`click`, gameController.gameplayLoop, { once: true })
         })
     }
 
