@@ -1,8 +1,37 @@
+header {
+    width: fit-content;
+}
+
 .subtitle {
     color: yellow;
     font-weight: bold;
 }
 
+.move-down {
+    margin-top: 10%!important;
+}
+
+.single-cell {
+    height: 33%;
+    max-height: 33%;
+}
+
 .modal {
     top: 150px;
+}
+
+.font-dimensions {
+    font-size: 56px;
+}
+
+@media (min-width: 720px) {
+    #game-grid {
+        max-width: 50vw;
+    }
+}
+
+@media (min-width: 1200px) {
+    #game-grid {
+        max-width: 35vw;
+    }
 }
