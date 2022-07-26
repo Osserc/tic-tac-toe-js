@@ -2,3 +2,7 @@
     color: yellow;
     font-weight: bold;
 }
+
+.modal {
+    top: 150px;
+}

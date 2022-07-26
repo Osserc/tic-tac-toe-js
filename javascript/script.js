@@ -13,8 +13,10 @@ const gameController = (() => {
 
     // function to set up the game
     const setUpGame = () => {
+        gameGrid.resetGrid()
         gameGrid.generateGrid()
         gameGrid.activateCells()
+        activateReplay()
     }
 
     // function to coordinate the gameplay loop
@@ -22,9 +24,9 @@ const gameController = (() => {
         gameGrid.etchCell(event)
         gameGrid.updateGrid(event)
         if (checkWinner(currentPlayer.symbol)) {
-            declareWinner(currentPlayer)
+            endgameVictory()
         } else if (checkDraw()) {
-            console.log("It was a draw...")
+            endgameDraw()
         } else {
             swapPlayers()
         }
@@ -48,23 +50,63 @@ const gameController = (() => {
         })
     }
 
-    // function to determine draw
+    // function to handle a won game
+    const endgameVictory = () => {
+        callModal()
+        writeWinner()
+    }
+
+    // function to check for draw
     const checkDraw = () => {
         return !gameGrid.gridSpots.some((item) => {
             return item == null
         })
     }
 
+    // function to handle a drawn game
+    const endgameDraw = () => {
+        callModal()
+        writeDraw()
+    }
+
+    // function to call modal
+    const callModal = () => {
+        endgameModal.classList.add(`show`)
+        endgameModal.style.display = `block`
+    }
+
+    // function to dismiss modal
+    const dismissModal = () => {
+        endgameModal.classList.remove(`show`)
+        endgameModal.style.display = `none`
+    }
+
+    // function to write winner on modal
+    const writeWinner = () => {
+        endgameModalTitle.innerHTML = `${currentPlayer.name} won the game!`
+    }
+
+    // function to write draw on modal
+    const writeDraw = () => {
+        endgameModalTitle.innerHTML = `It was a draw...`
+    }
+
+    // function to activate the play again button
+    const activateReplay = () => {
+        replayButton.addEventListener(`click`, function() {
+            dismissModal()
+            setUpGame()
+        })
+    }
+
     return {
         setUpGame,
         gameplayLoop,
-        swapPlayers
     }
 })()
 
 const gameGrid = (() => {
     const gridSpots = [...Array(9).fill(null)]
-
 
     // function to make grid cells responsive
     const activateCells = () => {
@@ -95,6 +137,7 @@ const gameGrid = (() => {
     // function to clear the grid
     const resetGrid = () => {
         displayGrid.replaceChildren()
+        gridSpots.fill(null)
     }
 
     return {
@@ -107,8 +150,11 @@ const gameGrid = (() => {
     }
 })()
 
-const playerOne = playerFactory("Pippo", "X")
-const playerTwo = playerFactory("Mak", "O")
+const playerOne = playerFactory(`Pippo`, `X`)
+const playerTwo = playerFactory(`Mak`, `O`)
 let currentPlayer = playerOne
+const endgameModal = document.querySelector('#endgame-modal')
+const endgameModalTitle = document.querySelector('#endgame-modal-title')
+const replayButton = document.querySelector(`#replay-button`)
 
 gameController.setUpGame()
