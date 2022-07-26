@@ -9,13 +9,14 @@ const playerFactory = (name, symbol) => {
 
 const gameController = (() => {
 
-    const winningLines = [[0, 1, 2], [0, 3, 6], [0, 4, 8], [1, 4, 7], [2, 5, 8], [3, 4, 5], [6, 7, 8]]
+    const winningLines = [[0, 1, 2], [0, 3, 6], [0, 4, 8], [1, 4, 7], [2, 5, 8], [3, 4, 5], [6, 7, 8], [2, 4, 6]]
 
     // function to set up the game
     const setUpGame = () => {
         gameGrid.resetGrid()
         gameGrid.generateGrid()
         gameGrid.activateCells()
+        currentPlayer = playerOne
         activateReplay()
     }
 
@@ -150,11 +151,22 @@ const gameGrid = (() => {
     }
 })()
 
-const playerOne = playerFactory(`Pippo`, `X`)
-const playerTwo = playerFactory(`Mak`, `O`)
+playerOne = playerFactory(`Pippo`, `X`)
+playerTwo = playerFactory(`Mak`, `O`)
 let currentPlayer = playerOne
 const endgameModal = document.querySelector('#endgame-modal')
 const endgameModalTitle = document.querySelector('#endgame-modal-title')
 const replayButton = document.querySelector(`#replay-button`)
+const playersModal = document.querySelector('#players-modal')
+const makePlayersForm = document.querySelector(`#make-players-form`)
+
+makePlayersForm.addEventListener(`submit`, function() {
+    event.preventDefault()
+    let names = event.target.elements
+    playerOne.name = names[0].value
+    playerTwo.name = names[1].value
+    playersModal.classList.remove(`show`)
+    playersModal.style.display = `none`
+})
 
 gameController.setUpGame()
