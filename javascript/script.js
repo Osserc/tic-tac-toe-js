@@ -9,6 +9,8 @@ const playerFactory = (name, symbol) => {
 
 const gameController = (() => {
 
+    const winningLines = [[0, 1, 2], [0, 3, 6], [0, 4, 8], [1, 4, 7], [2, 5, 8], [3, 4, 5], [6, 7, 8]]
+
     // function to set up the game
     const setUpGame = () => {
         gameGrid.generateGrid()
@@ -17,10 +19,15 @@ const gameController = (() => {
 
     // function to coordinate the gameplay loop
     const gameplayLoop = () => {
-        console.log("Hi!")
         gameGrid.etchCell(event)
         gameGrid.updateGrid(event)
-        swapPlayers()
+        if (checkWinner(currentPlayer.symbol)) {
+            declareWinner(currentPlayer)
+        } else if (checkDraw()) {
+            console.log("It was a draw...")
+        } else {
+            swapPlayers()
+        }
     }
 
     // function to swap players after they played
@@ -32,6 +39,22 @@ const gameController = (() => {
         }
     }
 
+    // function to check for win
+    const checkWinner = (playerSymbol) => {
+        return winningLines.some((item) => {
+            return item.every((cell) => {
+                return gameGrid.gridSpots[cell] == playerSymbol
+            })
+        })
+    }
+
+    // function to determine draw
+    const checkDraw = () => {
+        return !gameGrid.gridSpots.some((item) => {
+            return item == null
+        })
+    }
+
     return {
         setUpGame,
         gameplayLoop,
@@ -40,7 +63,7 @@ const gameController = (() => {
 })()
 
 const gameGrid = (() => {
-    const gridSpots = [...Array(9).keys()]
+    const gridSpots = [...Array(9).fill(null)]
 
 
     // function to make grid cells responsive
@@ -75,6 +98,7 @@ const gameGrid = (() => {
     }
 
     return {
+        gridSpots,
         generateGrid,
         activateCells,
         etchCell,
